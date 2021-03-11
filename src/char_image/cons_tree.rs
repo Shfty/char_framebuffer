@@ -4,6 +4,7 @@ use super::{line::{conn_line_h, conn_line_v}, linear_layout::LayoutDirection};
 use super::linear_cells::LinearCells;
 use super::text::{TextLine, TextLines};
 use super::{border::Border};
+use super::{padding::Padding};
 use super::{CharImage, Offset, Size};
 use crate::{char_image::builder::CharImageBuilder, char_plotter::CharPlotter, Position};
 use crate::{
@@ -153,7 +154,7 @@ where
                 Offset((w + 1) as isize, 0)
             }
             (LayoutDirection::Horizontal, LayoutDirection::Vertical) => Offset(0, h as isize),
-            (LayoutDirection::Vertical, LayoutDirection::Horizontal) => Offset(w as isize, 0),
+            (LayoutDirection::Vertical, LayoutDirection::Horizontal) => Offset((w + 1) as isize, 0),
             (LayoutDirection::Vertical, LayoutDirection::Vertical) => Offset(0, h as isize),
         });
         builder.subimage(self.cdr.clone());
@@ -175,7 +176,7 @@ where
                 builder.subimage(conn_line_v::<Heavy>((h - 1) as usize));
             }
             (LayoutDirection::Vertical, LayoutDirection::Horizontal) => {
-                builder.subimage(conn_line_h::<Heavy>(w - 3));
+                builder.subimage(conn_line_h::<Heavy>(w - 2));
             }
             (LayoutDirection::Vertical, LayoutDirection::Vertical) => {
                 builder.subimage(conn_line_v::<Heavy>((h - 3) as usize));
@@ -202,12 +203,12 @@ where
     }
 }
 
-pub fn single_cell_debug<T: Debug>(value: T) -> Border<Light, TextLines<String>> {
-    Border::new(TextLines::new(format!("{:#?}", value)))
+pub fn single_cell_debug<T: Debug>(value: T) -> Border<Light, Padding<TextLines<String>>> {
+    Border::new(Padding::new(Offset(1, 0), Offset(1, 0), TextLines::new(format!("{:#?}", value))))
 }
 
-pub fn single_cell_display<T: Display>(value: T) -> Border<Light, TextLines<String>> {
-    Border::new(TextLines::new(format!("{}", value)))
+pub fn single_cell_display<T: Display>(value: T) -> Border<Light, Padding<TextLines<String>>> {
+    Border::new(Padding::new(Offset(1, 0), Offset(1, 0), TextLines::new(format!("{}", value))))
 }
 
 #[cfg(test)]
