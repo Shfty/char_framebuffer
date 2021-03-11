@@ -62,7 +62,7 @@ impl<T: ToString> CharImage for TextLines<T> {
         let lines = self.0.to_string();
         let width = lines
             .split('\n')
-            .map(|line| line.replace('\n', "    "))
+            .map(|line| line.replace('\t', "    "))
             .fold(0, |acc, next| acc.max(next.len()));
         let height = lines.chars().filter(|char| *char == '\n').count() + 1;
         Size(width, height)
